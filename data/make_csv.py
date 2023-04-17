@@ -40,7 +40,7 @@ labels = {
     "DP03_0099PE": "Without health insurance %",
     "DP03_0002PE": "In labor force over 16yo %",
     "DP03_0011PE": "In labor force females over 16yo %",
-    "DP03_0025E": "Mean travel time to work (minutes)",
+    # "DP03_0025E": "Mean travel time to work (minutes)",
     "DP03_0128PE": "People in poverty %"
 }
 
@@ -49,11 +49,22 @@ with open("saved_data.json") as f:
 
 list_of_dicts = []
 for place in list(data.values())[1:]:
-    list_of_dicts.append(place)
+    # print(list(place.values()))
+    add = True
+    if place["state"] == "72":
+        add = False
+    for data in list(place.values()):
+        if data != None and data.strip('-').isnumeric():
+            if float(data) <= -666666:
 
-with open("census_data.csv", 'w', newline='') as file:
+                add = False
+    if add:
+        # print("skip")
+        list_of_dicts.append(place)
+
+with open("us_acs_qf_clean.csv", 'w', newline='') as file:
     # writes to a csv file using dictionary format
-    writer = csv.DictWriter(file, fieldnames=list(labels.keys()), restval='')
+    writer = csv.DictWriter(file, fieldnames=list(labels.keys()), restval='', extrasaction='ignore')
 
     # writes header
     writer.writerow(labels)

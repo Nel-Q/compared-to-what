@@ -19,7 +19,7 @@ variables = ["NAME", "DP02_0088E", "DP03_0062E", "DP05_0005PE", "DP05_0019PE", "
 
 # select what predicates to include
 # 10375,53000,24582,14000
-predicates = ["for=place:24582,14000&in=state:17" "NAICS2017=72"]
+predicates = ["for=place:*", "in=state:*"]
 
 # combine variables into one url for API request
 url = host_name + year + dataset + "?get=" + ','.join(variables) + '&' + '&'.join(predicates) + "&key=" + key
