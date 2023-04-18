@@ -1,12 +1,21 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import json
 app = Flask(__name__)
 
-with open("../data/saved_data.json") as file:
-	data = json.load(file)
 
-@app.route("/cities")
-def get_cities():
-	name = request.args.get('name')
-	ret = "Hello, " + name
-	return ret
+with open("../data/place_indices.json") as file:
+	place_indices = json.load(file)
+
+with open("../data/100nn_cities.json") as file:
+	knn_cities = json.load(file)
+
+@app.route("/all-places")
+def get_places():
+	return jsonify(list(place_indices["places"].keys()))
+
+@app.route("/get-similar")
+def get_similar_cities():
+	place = request.args.get("place")
+	similar_cities_indices = knn_cities[place_indices["places"][place]][1:11]
+	similar_cities_names = [place_indices["indices"][str(index)] for index in similar_cities_indices]
+	return similar_cities_names
