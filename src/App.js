@@ -27,8 +27,7 @@ function App() {
       const response = await fetch(`http://127.0.0.1:5000/get-similar?place=${querying}`)
       const data = await response.json();
       setSearchesults(data);
-      console.log(data)
-      console.log(searchResults)
+      setSearchQuery("")
     } catch (error) {
       console.error(error)
     }   
@@ -68,7 +67,7 @@ function App() {
       {searchResults.length > 0 && (
         <div className='search-results'>
           {searchResults.map((result) => (
-            <div key={result.id} className='search-result'>
+            <div key={result} className='search-result'>
               <h3>{result}</h3>
               {/* <p>{result.description}</p> */}
             </div>
