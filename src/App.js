@@ -1,7 +1,10 @@
 // import Dropdown from 'react-bootstrap/Dropdown'
 // import DropdownButton from 'react-bootstrap/DropdownButton'
 import './App.css';
-import {useState} from 'react'
+import {useState, useRef} from 'react'
+import Map from './Map'
+import { Marker } from 'mapbox-gl';
+
 
 function App() {
   const menuItems = ["Total Population", "Median Household Income", "Per Capita Income", "Under 5yo %"]
@@ -9,6 +12,7 @@ function App() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchesults] = useState([]);
+  const map = useRef(null);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
@@ -27,7 +31,9 @@ function App() {
       const response = await fetch(`http://127.0.0.1:5000/get-similar?place=${querying}`)
       const data = await response.json();
       setSearchesults(data);
-      setSearchQuery("")
+      setSearchQuery("");
+      const {latitude, longitude} = searchResults[0]
+      map.current.flyTo({center: [latitude, longitude], zoom: 12})
     } catch (error) {
       console.error(error)
     }   
@@ -64,6 +70,13 @@ function App() {
        <button className='search-button' onClick={()=>search(searchQuery)}>
         Search</button>
       </div>
+      <Map ref={map}>
+        {searchResults.map((result) => (
+          <Marker key={result} latitude={result.latitude} longitude={result.longitude}>
+            <div>{result.name}</div>
+          </Marker>
+        ))}
+      </Map>
       {searchResults.length > 0 && (
         <div className='search-results'>
           {searchResults.map((result) => (
