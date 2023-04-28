@@ -7,6 +7,8 @@ labels = {
     "place": "place_id",
     "state": "state_id",
     "DP02_0088E": "Total Population",
+    "Density": "Density",
+    "Land Area": "Land Area",
     "DP03_0062E": "Median Household Income",
     "DP03_0088E": "Per capita income",
     "DP05_0005PE": "Under 5yo %",
@@ -41,11 +43,48 @@ labels = {
     "DP03_0002PE": "In labor force over 16yo %",
     "DP03_0011PE": "In labor force females over 16yo %",
     # "DP03_0025E": "Mean travel time to work (minutes)",
-    "DP03_0128PE": "People in poverty %"
+    "DP03_0128PE": "People in poverty %",
+    "Latitude": "Latitude",
+    "Longitude": "Longitude"
 }
+
+# with open("2021_Gaz_place_national.txt") as file:
+#     datatable = [line.split() for line in file.read().splitlines()]
+
+# with open("state_names.json") as file:
+#     state_names = json.load(file)
 
 with open("saved_data.json") as f:
     data = json.load(f)
+
+# for gaz in datatable[1:]:
+#     found = False
+#     place_id = gaz[1]
+#     # name = gaz[3]
+#     # offset = 0
+#     # for entry in gaz[4:]:
+#     #     if not entry.isnumeric():
+#     #         name = name + " " + entry
+#     #         offset += 1
+#     #     else:
+#     #         break
+#     # name = name + ', ' + state_names[gaz[0]]
+#     # if gaz[0] != "PR":
+#     #     for place in list(data.values())[1:]:
+#     #         if place["NAME"] == name:
+#     #             found = True
+#     if place_id[0:2] != "72" and place_id in data:
+#     #     found = True
+#         place = data[place_id]
+#         place["Land Area"] = gaz[-4]
+#         place["Density"] = str(float(place["DP02_0088E"])/float(place["Land Area"]))
+#         place["Latitude"] = gaz[-2]
+#         place["Longitude"] = gaz[-1]
+#     # if not found:
+#     #     print(name)
+
+# with open("saved_data.json", 'w') as f:
+#     json.dump(data, f)
 
 list_of_dicts = []
 for place in list(data.values())[1:]:
@@ -56,13 +95,12 @@ for place in list(data.values())[1:]:
     for data in list(place.values()):
         if data != None and data.strip('-').isnumeric():
             if float(data) <= -666666:
-
                 add = False
     if add:
         # print("skip")
         list_of_dicts.append(place)
 
-with open("us_acs_qf_clean.csv", 'w', newline='') as file:
+with open("us_acs_qf_clean_density.csv", 'w', newline='') as file:
     # writes to a csv file using dictionary format
     writer = csv.DictWriter(file, fieldnames=list(labels.keys()), restval='', extrasaction='ignore')
 
