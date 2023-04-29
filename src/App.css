@@ -77,3 +77,9 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #ccc;
 }
+.suggestions {
+  list-style-type: none;
+}
+input:not(:focus) + .suggestions{
+  display: none;
+}

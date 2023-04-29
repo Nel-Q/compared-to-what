@@ -9,25 +9,39 @@ function App() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchesults] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+  
 
-  const handleSearchInput = (event) => {
+  const handleSearchInput = async(event) => {
+
     setSearchQuery(event.target.value);
+    try{
+      const response = await fetch(`http://127.0.0.1:5000/all-places`)
+      const data = await response.json()
+      console.log(data)
+      const filteredSuggestions = data.filter((suggestion) =>
+      suggestion.toLowerCase().includes(event.target.value.toLowerCase()));
+      setSuggestions(filteredSuggestions);
+    } catch(error) {
+      console.log(error)
+    } 
   };
 
   const search = async(query) => {
-    const queryList = query.split(",");
-    const querying = queryList[0].trim()+"+city,+"+queryList[1].trim()
-    console.log(querying)
+    // const queryList = query.split(",");
+    // const querying = queryList[0].trim()+"+city,+"+queryList[1].trim()
+    // console.log(querying)
     try{
-      const response = await fetch(`http://127.0.0.1:5000/get-similar?place=${querying}`)
+      const response = await fetch(`http://127.0.0.1:5000/get-similar?place=${searchQuery}`)
       const data = await response.json();
       setSearchesults(data);
       setSearchQuery("")
+      setSuggestions([])
     } catch (error) {
       console.error(error)
     }   
@@ -45,6 +59,7 @@ function App() {
         <input id="searchBox" placeholder="Enter a City Name"
         autoComplete="off" type="text" value={searchQuery}
         onChange={handleSearchInput}/>
+        
        <div className="dropdown-menu">
         <button onClick={() => setIsOpen(!isOpen)}>
           {selectedOption || "Filters"}
@@ -64,7 +79,16 @@ function App() {
        <button className='search-button' onClick={()=>search(searchQuery)}>
         Search</button>
       </div>
-      {searchResults.length > 0 && (
+      {suggestions.length > 0 && (
+          <ul className="suggestions">
+            {suggestions.map((suggestion) => (
+              <li key={suggestion} onClick={() => setSearchQuery(suggestion)}>
+                {suggestion}
+              </li>
+            ))}
+          </ul>
+        )}
+      {(searchResults.length > 0 && searchQuery !== "") && (
         <div className='search-results'>
           {searchResults.map((result) => (
             <div key={result} className='search-result'>
