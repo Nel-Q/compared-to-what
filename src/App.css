@@ -77,3 +77,16 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #ccc;
 }
+.suggestions {
+  list-style-type: none;
+}
+.suggestions-item{
+  width: 250px;
+}
+.suggestions-item:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
+}
+input:not(:focus) + .suggestions{
+  display: none;
+}
