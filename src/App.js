@@ -23,10 +23,11 @@ function App() {
     try{
       const response = await fetch(`http://127.0.0.1:5000/all-places`)
       const data = await response.json()
-      console.log(data)
       const filteredSuggestions = data.filter((suggestion) =>
-      suggestion.toLowerCase().includes(event.target.value.toLowerCase()));
-      setSuggestions(filteredSuggestions);
+      suggestion.toLowerCase().includes(searchQuery.toLowerCase()));
+      if (event.target.value.length !== 0) {
+        setSuggestions(filteredSuggestions)
+      } else {setSuggestions([])}
     } catch(error) {
       console.log(error)
     } 
@@ -36,6 +37,7 @@ function App() {
     // const queryList = query.split(",");
     // const querying = queryList[0].trim()+"+city,+"+queryList[1].trim()
     // console.log(querying)
+    console.log(searchQuery)
     try{
       const response = await fetch(`http://127.0.0.1:5000/get-similar?place=${searchQuery}`)
       const data = await response.json();
@@ -82,13 +84,13 @@ function App() {
       {suggestions.length > 0 && (
           <ul className="suggestions">
             {suggestions.map((suggestion) => (
-              <li key={suggestion} onClick={() => setSearchQuery(suggestion)}>
+              <li key={suggestion} className='suggestions-item' onClick={() => setSearchQuery(suggestion)}>
                 {suggestion}
               </li>
             ))}
           </ul>
         )}
-      {(searchResults.length > 0 && searchQuery !== "") && (
+      {searchResults.length > 0 && (
         <div className='search-results'>
           {searchResults.map((result) => (
             <div key={result} className='search-result'>
