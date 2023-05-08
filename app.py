@@ -1,7 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 import json
-app = Flask(__name__)
+app = Flask(__name__, template_folder="public")
 
 # CORS: allows anyone from anywhere to use your API:
 cors = CORS(app)
@@ -11,6 +11,10 @@ with open("data/place_indices.json") as file:
 with open("data/100nn_cities.json") as file:
 	knn_cities = json.load(file)
 
+@app.route('/')
+def home():
+	return render_template("index.html")
+	# return "test"
 @app.route("/all-places")
 def get_places():
 	return jsonify(list(place_indices["places"].keys()))

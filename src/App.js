@@ -1,7 +1,7 @@
 // import Dropdown from 'react-bootstrap/Dropdown'
 // import DropdownButton from 'react-bootstrap/DropdownButton'
 import './App.css';
-import {useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 
 function App() {
   const menuItems = ["Total Population", "Median Household Income", "Per Capita Income", "Under 5yo %"]
@@ -10,22 +10,36 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchesults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
+  const [data, setData] = useState(null)
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
   
+  useEffect(() => {
+    const fetchData = async() => {
+      try{
+        const response = await fetch(`https://comparedtowhat.azurewebsites.net/all-places`)
+        const result = await response.json();
+        setData(result)
+      } catch (error) {
+        console.log(error)
+      }
+      
+    };
+    fetchData();
+  },[]);
 
-  const handleSearchInput = async(event) => {
+  const memoizedData = useMemo(() => data, [data])
+  const handleSearchInput = (event) => {
 
     setSearchQuery(event.target.value);
     try{
-      const response = await fetch(`http://127.0.0.1:5000/all-places`)
-      const data = await response.json()
-      const filteredSuggestions = data.filter((suggestion) =>
-      suggestion.toLowerCase().includes(searchQuery.toLowerCase()));
-      if (event.target.value.length !== 0) {
+      
+      if (searchQuery.length >= 3) {
+        const filteredSuggestions = memoizedData.filter((suggestion) =>
+        suggestion.toLowerCase().includes(searchQuery.toLowerCase()));
         setSuggestions(filteredSuggestions)
       } else {setSuggestions([])}
     } catch(error) {
@@ -34,12 +48,8 @@ function App() {
   };
 
   const search = async(query) => {
-    // const queryList = query.split(",");
-    // const querying = queryList[0].trim()+"+city,+"+queryList[1].trim()
-    // console.log(querying)
-    console.log(searchQuery)
     try{
-      const response = await fetch(`http://127.0.0.1:5000/get-similar?place=${searchQuery}`)
+      const response = await fetch(`https://comparedtowhat.azurewebsites.net/get-similar?place=${searchQuery}`)
       const data = await response.json();
       setSearchesults(data);
       setSearchQuery("")
