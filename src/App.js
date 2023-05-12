@@ -4,7 +4,7 @@ import './App.css';
 import {useEffect, useMemo, useState} from 'react'
 
 function App() {
-  const menuItems = ["Total Population", "Median Household Income", "Per Capita Income", "Under 5yo %"]
+  const [menuItems, setMenuItems] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,12 +31,26 @@ function App() {
     fetchData();
   },[]);
 
-  const memoizedData = useMemo(() => data, [data])
+  useEffect(() => {
+    const fetchFilters = async() => {
+      try{
+        const response = await fetch(`https://comparedtowhat.azurewebsites.net/all-filters`)
+        const result = await response.json();
+        setMenuItems(result)
+      } catch (error) {
+        console.log(error)
+      }
+      
+    };
+    fetchFilters();
+  },[]);
+
+  const memoizedMenu = useMemo(() => menuItems, [menuItems]);
+  const memoizedData = useMemo(() => data, [data]);
   const handleSearchInput = (event) => {
 
     setSearchQuery(event.target.value);
     try{
-      
       if (searchQuery.length >= 3) {
         const filteredSuggestions = memoizedData.filter((suggestion) =>
         suggestion.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -47,16 +61,31 @@ function App() {
     } 
   };
 
-  const search = async(query) => {
-    try{
-      const response = await fetch(`https://comparedtowhat.azurewebsites.net/get-similar?place=${searchQuery}`)
-      const data = await response.json();
-      setSearchesults(data);
-      setSearchQuery("")
-      setSuggestions([])
-    } catch (error) {
-      console.error(error)
-    }   
+  const search = async(query, filter) => {
+    if (selectedOption !== null) {
+      try{
+        console.log(selectedOption);
+        const response = await fetch(`https://comparedtowhat.azurewebsites.net/get-similar?place=${query}&filter=${filter}`)
+        const data = await response.json();
+        setSearchesults(data);
+        setSearchQuery("")
+        setSelectedOption(null)
+        setSuggestions([])
+      } catch (error) {
+        console.error(error)
+      } 
+    } else {
+      try{
+        const response = await fetch(`https://comparedtowhat.azurewebsites.net/get-similar?place=${query}`)
+        const data = await response.json();
+        setSearchesults(data);
+        setSearchQuery("")
+        setSuggestions([])
+      } catch (error) {
+        console.error(error)
+      }   
+    }
+    
   };
   return (
     <div className="App">
@@ -78,17 +107,17 @@ function App() {
         </button>
         {isOpen && (
           <ul>
-            {menuItems.map((item) => {
+            {memoizedMenu.map((item) => {
               return(
               <li key={item} onClick={()=> handleOptionClick(item)}>
-                {item}
+                {item.charAt(0).toUpperCase() + item.slice(1)}
               </li>
               
             );})}
           </ul>
         )}
        </div>
-       <button className='search-button' onClick={()=>search(searchQuery)}>
+       <button className='search-button' onClick={()=>search(searchQuery, selectedOption)}>
         Search</button>
       </div>
       {suggestions.length > 0 && (

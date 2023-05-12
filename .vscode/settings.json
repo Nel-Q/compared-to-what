@@ -1,4 +1,4 @@
 {
-    "appService.defaultWebAppToDeploy": "undefined/subscriptions/e19cea48-dcb0-4d79-be9f-cd838a75828d/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/comparedtowhere",
-    "appService.deploySubpath": "build"
+    "appService.defaultWebAppToDeploy": "/subscriptions/e19cea48-dcb0-4d79-be9f-cd838a75828d/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/comparedtowhere",
+    "appService.deploySubpath": "."
 }
