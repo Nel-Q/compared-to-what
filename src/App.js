@@ -90,7 +90,7 @@ function App() {
   return (
     <div className="App">
       <header className="Header">
-        <h1>Compared-to-What</h1>
+        <h1>Compared-to-Where</h1>
         <div className="Contact-info">
           <a href="app.js"><button id="Home">Home</button></a>
           <button id="Contact">Contact Us</button>
