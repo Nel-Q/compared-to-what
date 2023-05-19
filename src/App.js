@@ -68,8 +68,6 @@ function App() {
         const response = await fetch(`https://comparedtowhat.azurewebsites.net/get-similar?place=${query}&filter=${filter}`)
         const data = await response.json();
         setSearchesults(data);
-        setSearchQuery("")
-        setSelectedOption(null)
         setSuggestions([])
       } catch (error) {
         console.error(error)
@@ -96,11 +94,21 @@ function App() {
           <button id="Contact">Contact Us</button>
         </div>
       </header>
-      <div className="searchPart">
-        <input id="searchBox" placeholder="Enter a City Name"
-        autoComplete="off" type="text" value={searchQuery}
-        onChange={handleSearchInput}/>
-        
+      <div className="searchComponent">
+        <div className='searchPart'>
+          <input id="searchBox" placeholder="Enter a City Name"
+          autoComplete="off" type="text" value={searchQuery}
+          onChange={handleSearchInput}/>
+          {suggestions.length > 0 && (
+          <ul className="suggestions">
+            {suggestions.map((suggestion) => (
+              <li key={suggestion} className='suggestions-item' onClick={() => setSearchQuery(suggestion)}>
+                {suggestion}
+              </li>
+            ))}
+          </ul>
+        )}
+        </div>
        <div className="dropdown-menu">
         <button onClick={() => setIsOpen(!isOpen)}>
           {selectedOption || "Filters"}
@@ -120,15 +128,6 @@ function App() {
        <button className='search-button' onClick={()=>search(searchQuery, selectedOption)}>
         Search</button>
       </div>
-      {suggestions.length > 0 && (
-          <ul className="suggestions">
-            {suggestions.map((suggestion) => (
-              <li key={suggestion} className='suggestions-item' onClick={() => setSearchQuery(suggestion)}>
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )}
       {searchResults.length > 0 && (
         <div className='search-results'>
           {searchResults.map((result) => (

@@ -49,17 +49,26 @@
   padding: 35px;
   
 }
-.searchPart{
+.searchComponent{
   padding: 30px;
   display:grid;
   width: 800px;
   grid-template-columns: 1fr 0.5fr 0.5fr;
   column-gap: 20px;
 }
+.searchPart{
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+#searchBox{
+  height: 30px;
+}
 .search-button{
   background-color: #4681f4;
   color:white;
   width: 100px;
+  height: 40px;
   border-color: #4681f4;
 }
 .search-results {
@@ -79,6 +88,11 @@
 }
 .suggestions {
   list-style-type: none;
+  height:150px;
+  border: 1px solid #ccc;
+  /* text-align: left; */
+  overflow-y: scroll;
+  
 }
 .suggestions-item{
   width: 250px;
