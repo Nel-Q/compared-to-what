@@ -166,6 +166,10 @@ function App() {
           )}
         </div>
         <aside>
+          <div className='filter-info' dangerouslySetInnerHTML={{ __html: filterDescription }}></div>
+          <p>Changing the filter does not mean only the named metrics will matter. For example, 
+              if you use the location filter on a suburb, the tool will not return the major city 
+              it is a suburb of, but instead will show other similar suburbs in the same region of America.</p>
           <div className='tool-info'>
             <h3>About</h3>
             <p>Compared To Where is a tool designed to help journalists and other researchers find comparable American cities to enhance their work. 
@@ -181,10 +185,6 @@ function App() {
               To see a description of all filters click <a href='https://comparedtowhat.azurewebsites.net/all-filters'>here</a>.
             </p>
           </div>
-          <div className='filter-info' dangerouslySetInnerHTML={{ __html: filterDescription }}></div>
-          <p>Changing the filter does not mean only the named metrics will matter. For example, 
-              if you use the location filter on a suburb, the tool will not return the major city 
-              it is a suburb of, but instead will show other similar suburbs in the same region of America.</p>
         </aside>
       </main>
     </div>
