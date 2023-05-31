@@ -1,5 +1,3 @@
-// import Dropdown from 'react-bootstrap/Dropdown'
-// import DropdownButton from 'react-bootstrap/DropdownButton'
 import './App.css';
 import {useEffect, useMemo, useState} from 'react'
 
@@ -12,11 +10,19 @@ function App() {
   const [suggestions, setSuggestions] = useState([]);
   const [data, setData] = useState(null);
   const [filterDescription, setFilterDescription] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+  const handleInputFocus = () => {
+    setShowSuggestions(true);
+  }
+  const handleSuggestionClick = (suggestion) => {
+    setSearchQuery(suggestion);
+    setShowSuggestions(false);
+  }
   
   useEffect(() => {
     const fetchData = async() => {
@@ -113,7 +119,7 @@ function App() {
           <h1>Compared-to-Where</h1>
           <div className="Contact-info">
             <a href="app.js"><button id="Home">Home</button></a>
-            <button id="Filter-Header">Filters</button>
+            <a href='https://comparedtowhat.azurewebsites.net/filters'><button id="Filter-Header">Filters</button></a>
             <button id="About">About</button>
           </div>
         </header>
@@ -123,11 +129,14 @@ function App() {
             <div className='searchPart'>
               <input id="searchBox" placeholder="Enter a City Name"
               autoComplete="off" type="text" value={searchQuery}
-              onChange={handleSearchInput}/>
-              {suggestions.length > 0 && (
+              onChange={handleSearchInput}
+              onFocus={handleInputFocus}/>
+
+              {showSuggestions && suggestions.length > 0 && (
               <ul className="suggestions">
                 {suggestions.map((suggestion) => (
-                  <li key={suggestion} className='suggestions-item' onClick={() => setSearchQuery(suggestion)}>
+                  <li key={suggestion} className='suggestions-item' 
+                  onClick={() => handleSuggestionClick(suggestion)}>
                     {suggestion}
                   </li>
                 ))}
@@ -182,7 +191,7 @@ function App() {
               After you search for a city, the 10 most similar cities will appear on the left. 
               We use a nearest neighbors algorithm to find the cities that are the best match for all of our data metrics. 
               You can use filters, which adjust the weighted importance of the metrics to change the results. 
-              To see a description of all filters click <a href='https://comparedtowhat.azurewebsites.net/all-filters'>here</a>.
+              To see a description of all filters click <a href='https://comparedtowhat.azurewebsites.net/filters'>here</a>.
             </p>
           </div>
         </aside>

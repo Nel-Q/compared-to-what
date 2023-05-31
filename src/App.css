@@ -63,6 +63,7 @@
 .searchPart{
   display: flex;
   flex-direction: column;
+
 }
 #searchBox{
   height: 30px;
@@ -74,7 +75,7 @@
   width: 100px;
   height: 38px;
   border-color: #4285f4;
-  margin-left: -40px;
+  
   color: white;
 }
 .search-results {
@@ -96,14 +97,18 @@
   list-style-type: none;
   height:150px;
   border: 1px solid #ccc;
-  /* text-align: left; */
   overflow-y: scroll;
   background-color: #e6e6e6;
-  text-align: left;
-  /* z-index: -1; */
+  
+  
 }
-
-
+.suggestions li{
+  text-align: left;
+  margin-left: -20px;
+  width: 300px;
+  padding: 3px;
+  
+}
 .suggestions-item:hover {
   background-color: white;
   cursor: pointer;
@@ -117,13 +122,13 @@ aside{
   margin-top: 30px;
 }
 
-@media only screen and (max-width: 700px) {
-  .modal{
-    max-width: 50%;
-    margin-left: 10px;
+@media (min-width: 700px) {
+  .Modal{
+    max-width: 70%;
+    margin-left: -10px;
   }
   aside{
-    max-width: 100%;
+    max-width: 70%;
     height:50%;
   }
 }
